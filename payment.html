@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Payment Gateway</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        padding: 20px;
+        background-color: #f4f4f9;
+      }
+      .payment-form {
+        max-width: 400px;
+        margin: auto;
+        padding: 20px;
+        background: #ffffff;
+        border-radius: 15px;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+      }
+      .payment-form h2 {
+        margin-bottom: 20px;
+        color: #333;
+        font-size: 24px;
+        font-weight: bold;
+      }
+      .input-group {
+        margin-bottom: 20px;
+        text-align: left;
+      }
+      .input-group label {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 14px;
+        font-weight: bold;
+        color: #555;
+      }
+      .input-group input {
+        width: 94%;
+        padding: 10px;
+        font-size: 14px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        transition: border-color 0.3s;
+      }
+      .input-group input:focus {
+        border-color: #4caf50;
+        outline: none;
+      }
+      button {
+        width: 100%;
+        padding: 12px;
+        background: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+      button:hover {
+        background: #45a049;
+      }
+      .message {
+        margin-top: 20px;
+        font-size: 16px;
+        font-weight: bold;
+      }
+      .card-icons {
+        margin-bottom: 15px;
+      }
+      .card-icons img {
+        width: 40px;
+        margin-right: 10px;
+      }
+      .footer {
+        margin-top: 20px;
+        font-size: 12px;
+        color: #777;
+      }
+    </style>
+  </head>
+  <body>
+  
+    <div class="payment-form">
+      <h2>Secure Payment Gateway</h2>
+      <div class="card-icons">
+        <img src="https://img.icons8.com/color/48/visa.png" alt="Visa">
+        <img src="https://img.icons8.com/color/48/mastercard.png" alt="MasterCard">
+        <img src="https://img.icons8.com/color/48/amex.png" alt="American Express">
+      </div>
+      <div class="container">
+        <form id="paymentForm">
+          <div class="input-group">
+            <label for="cardNumber">Card Number</label>
+            <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" required>
+          </div>
+          <div class="input-group">
+            <label for="expiryDate">Expiry Date (MM/YY)</label>
+            <input type="text" id="expiryDate" placeholder="MM/YY" required>
+          </div>
+          <div class="input-group">
+            <label for="cvv">CVV</label>
+            <input type="text" id="cvv" placeholder="123" required>
+          </div>
+          <button type="submit">Pay Securely</button>
+          <p>or</p>
+          <button>
+            <a href="index.html" style="text-decoration: none; color: inherit;">Back to Home</a>
+          </button>
+        </form>
+        <div class="message" id="message"></div>
+      </div>
+      <div class="footer">Your payment is secured and encrypted.</div>
+      
+
+      <div class="message" id="message"></div>
+    </div>
+    <div class="footer">Your payment is secured and encrypted.</div>
+
+    
+
+  
+    
+  </body>
+    <script>
+
+document.getElementById("paymentForm").addEventListener("submit", function (event) {
+  event.preventDefault();
+
+  const cardNumber = document.getElementById("cardNumber").value.trim();
+  const expiryDate = document.getElementById("expiryDate").value.trim();
+  const cvv = document.getElementById("cvv").value.trim();
+  const messageDiv = document.getElementById("message");
+
+  // Validation
+  if (!/^\d{4} \d{4}( \d{4})?( \d{4})?$/.test(cardNumber)) {
+    messageDiv.textContent = "Card number must be 12-16 digits and grouped by 4 with spaces.";
+    messageDiv.style.color = "red";
+    return;
+  }
+  if (!/^\d{2}\/\d{2}$/.test(expiryDate)) {
+    messageDiv.textContent = "Expiry date must be in MM/YY format.";
+    messageDiv.style.color = "red";
+    return;
+  }
+  if (!/^\d{3}$/.test(cvv)) {
+    messageDiv.textContent = "CVV must be 3 digits.";
+    messageDiv.style.color = "red";
+    return;
+  }
+
+  // Simulate payment processing
+  messageDiv.textContent = "Processing payment...";
+  messageDiv.style.color = "blue";
+
+  setTimeout(() => {
+    const isSuccess = Math.random() > 0.2; // 80% success rate
+    if (isSuccess) {
+      messageDiv.textContent = "Payment successful! Transaction ID: " + Math.floor(Math.random() * 1000000);
+      messageDiv.style.color = "green";
+    } else {
+      messageDiv.textContent = "Payment failed! Please try again.";
+      messageDiv.style.color = "red";
+    }
+  }, 2000);
+});
+
+// Input formatting
+document.getElementById("cardNumber").addEventListener("input", function (event) {
+  let value = event.target.value.replace(/\D/g, ""); // Remove non-digits
+  value = value.match(/.{1,4}/g)?.join(" ").substring(0, 19) || ""; // Format as xxxx xxxx xxxx xxxx
+  event.target.value = value;
+});
+
+document.getElementById("expiryDate").addEventListener("input", function (event) {
+  let value = event.target.value.replace(/\D/g, ""); // Remove non-digits
+  if (value.length > 2) value = value.substring(0, 2) + "/" + value.substring(2, 4); // Format as MM/YY
+  event.target.value = value.substring(0, 5); // Max length 5
+});
+
+document.getElementById("cvv").addEventListener("input", function (event) {
+  event.target.value = event.target.value.replace(/\D/g, "").substring(0, 3); // Max 3 digits
+});
+
+
+  </script>
+</body>
+</html>
